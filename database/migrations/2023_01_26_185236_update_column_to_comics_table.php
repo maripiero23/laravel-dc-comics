@@ -33,7 +33,14 @@ return new class extends Migration
     public function down()
     {
         Schema::table('comics', function (Blueprint $table) {
-            //
+            $table->id();
+            $table->timestamps();
+            $table->string('description');
+            $table->string('thumb');
+            $table->float('price', 5, 2);
+            $table->string('series');
+            $table->date('sale_date');
+            $table->string('type');
         });
     }
 };
