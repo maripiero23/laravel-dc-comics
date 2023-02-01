@@ -42,15 +42,24 @@ class ComicsController extends Controller
      */
     public function store(Request $request)
     {
+        $data = $request->validate([
+            "title" => "required|min:10 |max:200",
+            "description" => "required|string",
+            "series" => "required|string",
+            "type" => "string"
+            // devi mettere anche gli altri
+        ]);
+
+
         // recuperiamo tutti i dati inviati dal form sotto forma di array associativo
         $data = $request->all();
 
         $comic = New Comics();
         $comic->description=$data["description"];
-        $comic->description=$data["thumb"];
-        $comic->description=(float)$data["price"];
-        $comic->description=$data["series"];
-        $comic->description=$data["sale_date"];
+        $comic->thumb=$data["thumb"];
+        $comic->price=(float)$data["price"];
+        $comic->series=$data["series"];
+        $comic->sale_date=$data["sale_date"];
         $comic->description=$data["type"];
         $comic->save();
         
@@ -109,6 +118,14 @@ class ComicsController extends Controller
           $comic = Comics::findOrFail($id);
 
         //sul film appena modificato vado ad aggiornare i dati
+        $comic->update($data);
+
+        //Il validate oltre a controllare i dati mi ritoena i dati indicati
+        $data = $request->validate([
+            "title" => "required"
+        ]);
+
+        $comic = Comics::findOrFail($id);
         $comic->update($data);
 
         return redirect()->route('comics.show', $comic->$id);
